@@ -62,7 +62,15 @@ fn is_python_loop(statement: &str) -> bool {
 
     false
 }
-
+fn identify_number_type(input: &str) -> Option<&str> {
+    if let Ok(num) = input.parse::<i64>() {
+        Some("i64")
+    } else if let Ok(num) = input.parse::<f64>() {
+        Some("f64")
+    } else {
+        None
+    }
+}
 fn replace_all_occurrences(s: &str, target: &str, new: &str) -> Box<str> {
     let result = s.replace(target, new);
     result.into_boxed_str()
@@ -129,11 +137,11 @@ fn code(lines: Vec<String>, variables: &mut HashMap<String, Value_var>){
 
             println!("{:?}",divided);
         }else if is_python_augmented_assignment(&line){
-            let mut parts: Vec<&str> = line.trim().split("+").collect();
-            parts[0] = parts[0].trim_end();
-            println!("D:{:?}", parts);
-            let parts: String = parts[1].trim().to_string().replace("=", "");
-            println!("D:{:?}", parts);
+            let mut parts: Vec<&str> = line.trim().split("=").collect();
+            if parts[0].chars().last().unwrap() == '+'{
+                println!("Its a start");
+                //identify_number_type
+            }
            //im not sure my guys
         }else if is_python_var(&line) == true{
             let parts: Vec<&str> = line.trim().split("=").collect();
